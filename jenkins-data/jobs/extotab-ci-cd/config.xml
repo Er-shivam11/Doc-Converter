@@ -1,0 +1,7 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@1385.vb_58b_86ea_fff1">
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
