@@ -2,7 +2,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 6811:
+/***/ 237:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 
@@ -225,8 +225,8 @@ function isInViewport(element) {
   const rect = element.getBoundingClientRect();
   return rect.top >= 0 && rect.left >= 0 && rect.bottom <= window.innerHeight && rect.right <= window.innerWidth;
 }
-// EXTERNAL MODULE: ./.yarn/cache/tippy.js-npm-6.3.7-424f946d38-cac955318a.zip/node_modules/tippy.js/dist/tippy.esm.js + 16 modules
-var tippy_esm = __webpack_require__(1590);
+// EXTERNAL MODULE: ../../../../../.yarn/berry/cache/tippy.js-npm-6.3.7-424f946d38-10c0.zip/node_modules/tippy.js/dist/tippy.esm.js + 16 modules
+var tippy_esm = __webpack_require__(9934);
 ;// CONCATENATED MODULE: ./src/main/js/components/dropdowns/utils.js
 
 
@@ -592,7 +592,6 @@ function generateButtons() {
             }
             return 0; // can't happen
           }
-
           let bestPos = findBestPosition(template.descriptorId, current, o);
           if (bestPos < current.length) {
             return current[bestPos];
@@ -1008,13 +1007,13 @@ function confirmation_link_init() {
 /* harmony default export */ var confirmation_link = ({
   init: confirmation_link_init
 });
-// EXTERNAL MODULE: ./.yarn/cache/jquery-npm-3.7.1-eeeac0f21e-4370b8139d.zip/node_modules/jquery/dist/jquery.js
-var jquery = __webpack_require__(4198);
+// EXTERNAL MODULE: ../../../../../.yarn/berry/cache/jquery-npm-3.7.1-eeeac0f21e-10c0.zip/node_modules/jquery/dist/jquery.js
+var jquery = __webpack_require__(6284);
 var jquery_default = /*#__PURE__*/__webpack_require__.n(jquery);
-// EXTERNAL MODULE: ./.yarn/cache/window-handle-npm-1.0.1-369b8e9cbe-8f2c183a0d.zip/node_modules/window-handle/index.js
-var window_handle = __webpack_require__(30);
-// EXTERNAL MODULE: ./.yarn/cache/handlebars-npm-4.7.8-25244c2c82-00e68bb5c1.zip/node_modules/handlebars/runtime.js
-var runtime = __webpack_require__(4389);
+// EXTERNAL MODULE: ../../../../../.yarn/berry/cache/window-handle-npm-1.0.1-369b8e9cbe-10c0.zip/node_modules/window-handle/index.js
+var window_handle = __webpack_require__(6569);
+// EXTERNAL MODULE: ../../../../../.yarn/berry/cache/handlebars-npm-4.7.8-25244c2c82-10c0.zip/node_modules/handlebars/runtime.js
+var runtime = __webpack_require__(7218);
 var runtime_default = /*#__PURE__*/__webpack_require__.n(runtime);
 ;// CONCATENATED MODULE: ./src/main/js/util/jenkins.js
 /**
@@ -1361,7 +1360,11 @@ Dialog.prototype.appendButtons = function () {
       <button data-id="ok" type="${this.options.submitButton ? "submit" : "button"}" class="jenkins-button jenkins-button--primary ${_typeClassMap[this.options.type]}">${this.options.okText}</button>
       <button data-id="cancel" class="jenkins-button">${this.options.cancelText}</button>
     </div>`);
-  this.dialog.appendChild(buttons);
+  if (this.dialogType === "form") {
+    this.form.appendChild(buttons);
+  } else {
+    this.dialog.appendChild(buttons);
+  }
   this.ok = buttons.querySelector("[data-id=ok]");
   this.cancel = buttons.querySelector("[data-id=cancel]");
   if (!this.options.cancel) {
@@ -1390,22 +1393,18 @@ Dialog.prototype.show = function () {
     if (this.input != null) {
       this.input.focus();
     }
-    if (this.ok != null) {
+    if (this.ok != null && (this.dialogType != "form" || !this.options.submitButton)) {
       this.ok.addEventListener("click", e => {
-        if (this.dialogType === "form" && this.options.submitButton) {
-          this.form.submit();
-        } else {
-          e.preventDefault();
-          let value = true;
-          if (this.dialogType === "prompt") {
-            value = this.input.value;
-          }
-          if (this.dialogType === "form") {
-            value = new FormData(this.form);
-          }
-          this.dialog.remove();
-          resolve(value);
+        e.preventDefault();
+        let value = true;
+        if (this.dialogType === "prompt") {
+          value = this.input.value;
         }
+        if (this.dialogType === "form") {
+          value = new FormData(this.form);
+        }
+        this.dialog.remove();
+        resolve(value);
       }, {
         once: true
       });
@@ -1658,7 +1657,7 @@ dialogs.init();
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [216], function() { return __webpack_require__(6811); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [216], function() { return __webpack_require__(237); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

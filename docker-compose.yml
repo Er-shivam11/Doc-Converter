@@ -21,23 +21,13 @@ services:
       - "9090:80"
 
   excel_to_table:
-    build:
-      context: ./excel_to_table
-      dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    image: shivamhkhr/excel-to-table:latest  # Updated image attribute
+    command: python manage.py runserver 0.0.0.0:8001
     volumes:
       - ./excel_to_table:/app
     ports:
-      - "8000:8000"
+      - "8001:8001"
     environment:
       - DJANGO_SETTINGS_MODULE=excel_to_table.settings
     depends_on:
       - db
-
-  jenkins:
-    image: jenkins/jenkins:lts
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    volumes:
-      - ./jenkins-data:/var/jenkins_home

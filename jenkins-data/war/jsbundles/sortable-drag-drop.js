@@ -2,11 +2,11 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 2236:
+/***/ 1025:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 /* unused harmony export registerSortableTableDragDrop */
-/* harmony import */ var sortablejs_modular_sortable_core_esm_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6032);
+/* harmony import */ var sortablejs_modular_sortable_core_esm_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5281);
 /**
  * This module provides drag & drop functionality used by certain components,
  * such as f:repeatable or f:hetero-list.
@@ -228,7 +228,7 @@ window.registerSortableDragDrop = registerSortableDragDrop;
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [216], function() { return __webpack_require__(2236); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [216], function() { return __webpack_require__(1025); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

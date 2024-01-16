@@ -18,21 +18,23 @@ class Usertable(models.Model):
     def __str__(self) -> str:
         return self.type_name
 
-class TemplateMaster(models.Model):
-    name=models.CharField(max_length=200,verbose_name='template name',  blank=False, null=True)
-    status=models.BooleanField()
+
+class UploadTemplate(models.Model):
+    worksheet_name = models.CharField(max_length= 150,unique=True, null=True, blank=True)
+    creator = models.ForeignKey(Usertable, on_delete=models.SET_NULL,null=True)
+    worksheet_file = models.FileField(upload_to = 'worksheets', default = True)
     class Meta:
-        db_table = 'tbl_templatemaster'
+        db_table = 'tbl_uploadtemplate'
     def __str__(self) -> str:
-        return self.name
+        return self.worksheet_name
 
 class UserPermission(models.Model):
-    user_table=models.ForeignKey(Usertable,verbose_name='User name', on_delete=models.SET_NULL, null=True)
-    template_master=models.ForeignKey(TemplateMaster,verbose_name='template name', on_delete=models.SET_NULL, null=True)
+    user_table=models.ForeignKey(Usertable,verbose_name='User name', on_delete=models.SET_NULL, blank=True, null=True)
+    upload_template=models.ForeignKey(UploadTemplate,verbose_name='template name', on_delete=models.SET_NULL, null=True)
     class Meta:
         db_table = 'tbl_userpermission'
     def __str__(self) -> str:
-        return self.template_master
+        return self.upload_template
 
 class TemplateDetail(models.Model):
     step=models.IntegerField()
@@ -41,8 +43,9 @@ class TemplateDetail(models.Model):
     obs_value=models.CharField(max_length=200)
     start_time=models.CharField(max_length=200)
     end_time=models.CharField(max_length=200)
+    creator=models.CharField(max_length=200,null=True)
     class Meta:
         db_table = 'tbl_templatedetail'
     
     
-    
+

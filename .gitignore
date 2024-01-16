@@ -30,3 +30,13 @@ local_settings.py
 db.sqlite3
 *.sqlite3
 *.sql
+excel_to_table/media
+mysql-data
+
+
+.github/
+Jenkinsfile
+Jenkinsfile/
+jenkins-data
+jenkins-data/
+requirements.txt

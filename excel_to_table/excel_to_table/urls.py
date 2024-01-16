@@ -29,11 +29,13 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('select-template', views.selecttemplate, name='selecttemplate'),
+    path('select-form', views.selecttemplate, name='selecttemplate'),
+    path('addtemplate', views.addtemplate, name='addtemplate'),
     path('login/', views.loginuser, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-
-
-
-    path('save-data/', views.display_excel, name='savedata'),
+    path('approve/', views.user_check, name='approve'),
+    path('editform/', views.edit, name='editform'),
+    path('updateform/', views.update, name='savedata'),
+    
 ]
+

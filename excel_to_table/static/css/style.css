@@ -146,7 +146,7 @@ a,
 }
 
 body {
-    background: linear-gradient(to bottom, #3341ff, #000000);
+    background: linear-gradient(to bottom, #3341ff, #3341ff);
     font-size: 14px;
     font-family: 'Lato', sans-serif;
     line-height: 1.80857;
@@ -167,10 +167,6 @@ body {
     font-weight: 700;
 }
 
-
-.banner_main {
-    padding: 90px 0 190px 0;
-}
 
 
 .text-img{
