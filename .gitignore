@@ -1,42 +1,5 @@
-# .gitignore
 
-# Python
-*.pyc
-__pycache__/
-
-# Virtual Environment
-venv/
-env/
-
-# Docker
-.docker/
-docker-compose.override.yml
-
-# Django
-*.log
-*.pot
-*.pyc
-*.pyo
-__pycache__/
-local_settings.py
-
-# Editor/IDE specific files
-.vscode/
-*.sublime-workspace
-*.sublime-project
-.idea/
-
-# Database
-db.sqlite3
-*.sqlite3
-*.sql
-excel_to_table/media
-mysql-data
-
-
-.github/
 Jenkinsfile
 Jenkinsfile/
 jenkins-data
 jenkins-data/
-requirements.txt
