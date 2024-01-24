@@ -29,13 +29,21 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('select-form', views.selecttemplate, name='selecttemplate'),
-    path('addtemplate', views.addtemplate, name='addtemplate'),
     path('login/', views.loginuser, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('approve/', views.user_check, name='approve'),
+    path('addtemplate', views.addtemplate, name='addtemplate'),
+    path('select-temp', views.selecttemplate, name='selecttemplate'),
+    path('formuploaded/', views.formuploaded, name='formuploaded'),
     path('editform/', views.edit, name='editform'),
-    path('updateform/', views.update, name='savedata'),
+    path('updatelc/', views.update, name='updatelc'),
+    path('selectform/', views.selectform, name='selectform'),
+    path('showform/', views.showform, name='showform'),
+    path('approve/', views.user_check, name='approve'),
+
+
+
+    
+
     
 ]
 

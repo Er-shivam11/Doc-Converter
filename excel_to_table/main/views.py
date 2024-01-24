@@ -7,10 +7,10 @@ import pandas as pd
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .forms import UserPermissionForm,UploadWorkSheetForm
+from .forms import UserPermissionForm,UploadWorkSheetForm,FormSheet,RelationTempForm
 import os
 import pandas as pd
-from .models import TemplateDetail,UploadTemplate
+from .models import TemplateDetail,UploadTemplate,FormDetail,UploadedForm,TempFormRelation
 import numpy as np
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, authenticate
@@ -56,11 +56,12 @@ def addtemplate(request):
     if request.method == 'POST':
         form = UploadWorkSheetForm(request.POST, request.FILES)
         if form.is_valid():
-            # Save the form
+            
             upload_template_instance = form.save()
-
+            
             # Read the Excel file using pandas
             try:
+                tid=upload_template_instance.id
                 worksheet_name = upload_template_instance.worksheet_name
                 file_path=upload_template_instance.worksheet_file
                 creator_name = upload_template_instance.creator.type_name
@@ -78,13 +79,13 @@ def addtemplate(request):
                     'Start Time': 'start_time',
                     'End Time (hour)': 'end_time'
                 })
-                # print(data)
+                print(data)
                 data['Step No.'] = data['Step No.'].str.strip()
                 print(type(data))
                 print(data.head(10))
                 csv_file_path = os.path.join(settings.MEDIA_ROOT, 'formatted_data.csv')
                 data.to_csv(csv_file_path, index=False)
-         
+
                 for index, row in data.iterrows():
                 # Extract values from the DataFrame
                     step = row[0]
@@ -95,7 +96,7 @@ def addtemplate(request):
                     end_time = 'N/A'     # Placeholder for end_time, you need to extract it based on your data
                     step = ''.join(char for char in step if char.isdigit())
                     if not step:
-                        step = 1
+                        continue
                 # Create an instance of the TemplateDetail model and save it to the database
                     TemplateDetail.objects.create(
                         step=step,
@@ -104,14 +105,26 @@ def addtemplate(request):
                         obs_value=obs_value,
                         start_time=start_time,
                         end_time=end_time,
-                        creator=creator_name
+                        creator=creator_name,
+                        upload_template_id=tid
 
                     )
+                    # FormDetail.objects.create(
+                    #     step=step,
+                    #     description=description,
+                    #     std_value=std_value,
+                    #     obs_value=obs_value,
+                    #     start_time=start_time,
+                    #     end_time=end_time,
+                    #     creator=creator_name,
+
+
+                    # )
                 
                 # Print the values
 
             except pd.errors.EmptyDataError:
-                print("The Excel file is empty.")
+                print(form.errors)
             
             return redirect('selecttemplate')
         else:
@@ -124,7 +137,7 @@ def addtemplate(request):
     context = {
         'form': form
     }
-    return render(request, 'newform.html', context)
+    return render(request, 'addtemplate.html', context)
 
 
 
@@ -138,50 +151,117 @@ def selecttemplate(request):
         if count_form.is_valid():
 
             count_form.save()
-            return redirect('editform')
+            return redirect('formuploaded')
         else:
             print(count_form.errors)
     else:
         count_form = UserPermissionForm()
     context = {
         'tform': tform}
-    return render(request, 'tform.html', context)
+    return render(request, 'selecttemp.html', context)
+
+
+
+
+def formuploaded(request):
+    tform=FormSheet
+    if request.method == 'POST':
+        count_form = FormSheet(request.POST, request.FILES)
+        if count_form.is_valid():   
+            count_form.save()
+            return redirect('editform')
+        else:
+            print(count_form.errors)
+    else:
+        count_form = FormSheet()
+    context = {
+        'tform': tform} 
+    return render(request, 'addform.html', context)
+
+
 
 def edit(request):
-    edittemplate=TemplateDetail.objects.all()
+    tempform=TemplateDetail.objects.all()
+    fid = UploadedForm.objects.latest('id')
+    tid = UploadTemplate.objects.latest('id')
+    tempid=tid.id
+    formid=fid.id
 
-    context={'edittemplate':edittemplate}
-    return render(request,'display_form.html',context)
+    for formdetails in tempform:
+        FormDetail.objects.create(
+        step=formdetails.step,
+        description=formdetails.description,
+        std_value=formdetails.std_value,
+        obs_value=formdetails.obs_value,
+        start_time=formdetails.start_time,
+        end_time=formdetails.end_time,
+        creator=formdetails.creator,
+        form_name=fid,
+        upload_template=tid,
+        )
+    template_details_values = FormDetail.objects.filter(upload_template_id=tid,form_name_id=fid).values()
+    print("Template Details Count:", template_details_values.count())
+    
+
+    context={'edittemplate':template_details_values}
+    return render(request,'temptoform.html',context)
 
 def update(request):
+
     if request.method == 'POST':
-        # Assuming you have a unique identifier for each TemplateDetail instance
-        # For example, let's assume 'id' is the primary key
-        template_detail_id = request.POST.get('id')
-        
-        # Retrieve the TemplateDetail instance from the database
-        template_detail = TemplateDetail.objects.get(id=template_detail_id)
+        level_codes = request.POST.getlist('std_value[]')
+        print(level_codes,'level codes')
+        index_list = request.POST.getlist('id[]')
+        print(index_list)
+        for index, std_value in zip(index_list, level_codes):
+            try:
+                stddata = FormDetail.objects.get(id=int(index))
+                stddata.std_value = std_value
+                stddata.save()
+                print(stddata,'stddaa')
+            except FormDetail.DoesNotExist:
+                # Handle the case where the LevelCode object with the given 'id' doesn't exist
+                pass
+    context = {
+        'update_lc': update}
 
-        # Update the std_value field with the form data
-        template_detail.std_value = request.POST.get('std_value')
+    return render(request,'updateform.html',context)
 
-        # Save the updated instance back to the database
-        template_detail.save()
 
-        # Redirect to a success page or wherever you want to go after saving
-        return redirect('success_page')
-    edittemplate=TemplateDetail.objects.all()
+def selectform(request):
+    tform=RelationTempForm
+    if request.method == 'POST':
+        count_form = RelationTempForm(request.POST, request.FILES)
+        if count_form.is_valid():   
+            count_form.save()
+            return redirect('showform')
+        else:
+            print(count_form.errors)
+    else:
+        count_form = RelationTempForm()
+    context = {
+        'tform': tform} 
+    return render(request, 'selectform.html', context)
 
-    return render(request,'update.html',{'edittemplate': edittemplate})
+def showform(request):
+    tfr = TempFormRelation.objects.latest('id')
+    tid = UploadTemplate.objects.latest('id')
+    fid = UploadedForm.objects.latest('id')
+
+    tempid=tfr.upload_template_id
+    formid=tfr.form_details_id
+    user=tfr.user_table_id
+    print(tempid ,formid, user)
+
+    # edittemplate=FormDetail.objects.all()
+    edittemplate = FormDetail.objects.filter(upload_template_id=tid,form_name_id=fid).values()
+
+    return render(request,'showform.html',{'edittemplate': edittemplate})
 
 def user_check(request):
-    
-    edittemplate=TemplateDetail.objects.all()
-
-    # Handle GET requests or any other logic here
-    # ...
-
-    # Render the template with the form
+    edittemplate=FormDetail.objects.all()
+    if request.method=='POST':
+        return redirect('home')
     return render(request, 'userapproved.html', {'edittemplate': edittemplate})
 
     
